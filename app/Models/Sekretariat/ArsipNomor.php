@@ -10,5 +10,5 @@ class ArsipNomor extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['kode', 'desc'];
+    protected $fillable = ['id', 'kode', 'desc', 'is_able'];
 }

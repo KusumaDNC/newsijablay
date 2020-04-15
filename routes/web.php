@@ -12,10 +12,28 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/penggunaan-nomors', 'SuperController@index')->name('indxnomor');
+    Route::post('/penggunaan-nomors/add-nomor', 'SuperController@addNomor')->name('add.nd');
+ //    Route::get('/penggunaan-nomors', 'Sekretariat\Nomor\SettingNomorController@showSetting')->name('show.setting-nomor');
+	// Route::post('//penggunaan-nomors/add-nomor', 'Sekretariat\Nomor\SettingNomorController@addNomor')->name('add.nd');
+ //        Route::get('/settings/edit-nomor/{id}', 'Sekretariat\Nomor\SettingNomorController@editNomor')->name('edit.nd');
+ //        Route::patch('/settings/update-nomor/{id}', 'Sekretariat\Nomor\SettingNomorController@updateNomor')->name('update.nd');
+
+ //    Route::post('/', 'EKSTERNAL\PelabuhanController@addPelabuhan')->name('add.pelabuhan');
+ //    Route::get('/edit/{id}', 'EKSTERNAL\PelabuhanController@editPelabuhan')->name('edit.pelabuhan');
+ //    Route::post('/update/{id}', 'EKSTERNAL\PelabuhanController@updatePelabuhan')->name('update.pelabuhan');
+ //    Route::delete('/hapus/{id}', 'EKSTERNAL\PelabuhanController@deletePelabuhan')->name('delete.pelabuhan');
+ //    Route::get ('/PelabuhanMuat','EKSTERNAL\PelabuhanController@PelabuhanMuatExport')->name('export.pelabuhan');
+});
+
+

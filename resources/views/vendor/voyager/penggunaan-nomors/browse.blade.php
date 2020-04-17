@@ -255,12 +255,13 @@
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="col-md-12">
-                            <form class="form-horizontal" action="{{route('nmr.store')}}" method="post" >
-                                @csrf
+                            <form class="form-horizontal" action="{{route('nmr.store')}}" method="post" >{{ csrf_field() }}
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <input name="kategori" id="kategori" value="kategori" hidden>
                                         <input name="user_id" id="user_id" value="{{Auth::user()->id}}" hidden>
+                                         
                                     </div>
 
                                     <div class="col-md-6">
@@ -274,7 +275,8 @@
                                             <div class="input-group date">
                                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$todayss}}">
-                                                <input type="hidden" name="time" id="time" class="form-control" value="{{date('H:i:s')}}" hidden>
+                                                <input type="time" name="time" id="time" value="{{date('H:i:s')}}" hidden>
+                                                <!-- <input type="hidden" name="time" id="time" class="form-control" value="{{date('H:i:s')}}" hidden> -->
                                             </div>
                                         </div>
                                     </div>

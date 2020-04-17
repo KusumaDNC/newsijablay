@@ -4,13 +4,14 @@ namespace App\Models\Admin;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
+// use Spatie\Permission\Traits\HasRoles;
+
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
-    use HasRoles;
+    // use HasRoles;
 
     // Rest omitted for brevity
 

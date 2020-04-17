@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use TCG\Voyager\Facades\Voyager;
-
+use App\Http\Controllers\Controller;
 
 use App\Models\Sekretariat\ArsipNomor;
 use App\Models\Sekretariat\KategoriNomorModel;
@@ -14,7 +14,6 @@ use App\Models\Sekretariat\PenggunaanNomorModel;
 use App\Models\Sekretariat\SettingNomorModel;
 use Carbon\Carbon;
 use foo\bar;
-use App\Http\Controllers\Controller;
 
 
 class SuperController extends Controller
@@ -62,6 +61,7 @@ class SuperController extends Controller
 
 
     public function addnmrs(Request $request){
+        $this->authorize('browse', Voyager::model('Setting'));
 
         $tanggal_nomor = Carbon::parse($request->tanggal)->format('Y-m-d').' '.$request->time;
         //dd(Carbon::today()->gt(Carbon::parse($tanggal_nomor)));
@@ -107,6 +107,32 @@ class SuperController extends Controller
         }
 
 
+
+        return redirect()->back()->with('success', 'berhasil menambahkan nomor surat');
+    }
+
+
+
+    public function addnmrss(Request $request){
+
+        // dd($request->all());
+        $tanggal_nomor = Carbon::parse($request->tanggal)->format('Y-m-d').' '.$request->time;
+        //dd(Carbon::today()->gt(Carbon::parse($tanggal_nomor)));
+        //dd( Carbon::parse($request->tanggal)->format('Y-m-d'));
+        $total_nomor = PenggunaanNomorModel::latest()->first(); //bug
+        $nomor_terakhir = PenggunaanNomorModel::findOrFail($total_nomor);
+        // dd($nomor_terakhir);
+
+        $nomor = new PenggunaanNomorModel();
+            $nomor->user_id = $request->user_id;
+            // $nomor->kategori_nomor_id = $request->kategori;
+            $nomor->arsip_id = $request->kode;
+            $nomor->perihal = $request->perihal;
+            $nomor->tanggal = $tanggal_nomor;
+            $nomor->count = ($total_nomor->count) + 1;
+            $nomor->used = 1;
+
+        $nomor->save();
 
         return redirect()->back()->with('success', 'berhasil menambahkan nomor surat');
     }

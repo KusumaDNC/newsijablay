@@ -18,12 +18,14 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+
+    /*Route::get('input-data-osses','App\Http\Controllers\Voyager\DataOssController@import')->name('import.rekoss');*/
 });
 
 
-Route::prefix('admin')->group(function () {
+/*Route::prefix('admin')->group(function () {
     Route::get('/penggunaan-nomors', 'SuperController@index')->name('indxnomor');
-    Route::post('/penggunaan-nomors/store', 'SuperController@addnmrs')->name('nmr.store');
+    Route::post('/penggunaan-nomors/store', 'SuperController@addnmrs')->name('nmr.store');*/
  //    Route::get('/penggunaan-nomors', 'Sekretariat\Nomor\SettingNomorController@showSetting')->name('show.setting-nomor');
 	// Route::post('//penggunaan-nomors/add-nomor', 'Sekretariat\Nomor\SettingNomorController@addNomor')->name('add.nd');
  //        Route::get('/settings/edit-nomor/{id}', 'Sekretariat\Nomor\SettingNomorController@editNomor')->name('edit.nd');
@@ -34,6 +36,6 @@ Route::prefix('admin')->group(function () {
  //    Route::post('/update/{id}', 'EKSTERNAL\PelabuhanController@updatePelabuhan')->name('update.pelabuhan');
  //    Route::delete('/hapus/{id}', 'EKSTERNAL\PelabuhanController@deletePelabuhan')->name('delete.pelabuhan');
  //    Route::get ('/PelabuhanMuat','EKSTERNAL\PelabuhanController@PelabuhanMuatExport')->name('export.pelabuhan');
-});
+/*});*/
 
 

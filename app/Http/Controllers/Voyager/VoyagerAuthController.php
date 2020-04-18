@@ -6,5 +6,5 @@ use TCG\Voyager\Http\Controllers\VoyagerAuthController as BaseVoyagerAuthControl
 
 class VoyagerAuthController extends BaseVoyagerAuthController
 {
-    //
+
 }

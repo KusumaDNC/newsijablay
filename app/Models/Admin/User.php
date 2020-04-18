@@ -4,114 +4,50 @@ namespace App\Models\Admin;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use TCG\Voyager\Traits\VoyagerUser;
 
-class User extends Authenticatable implements JWTSubject
+// use Spatie\Permission\Traits\HasRoles;
+use TCG\Voyager\Contracts\User as UserContract;
+
+
+// use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements UserContract
 {
-    use Notifiable;
-    use HasRoles;
+    use VoyagerUser;
 
-    // Rest omitted for brevity
+    protected $guarded = [];
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier()
+    public $additional_attributes = ['locale'];
+
+    public function getAvatarAttribute($value)
     {
-        return $this->getKey();
+        return $value ?? config('voyager.user.default_avatar', 'users/default.png');
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
+    public function setCreatedAtAttribute($value)
     {
-        return [];
+        $this->attributes['created_at'] = Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 
-    protected $guard_name = 'web';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'username', 'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    /**
-     * eloquent user roles
-     * with pivot table
-     */
-    public function roles()
+    public function setSettingsAttribute($value)
     {
-        return $this->belongsToMany(Role::class, 'role_users');
+        $this->attributes['settings'] = $value->toJson();
     }
 
-    /**
-     * get user role name and slug
-     *
-     * @return array
-     */
-    public function role()
+    public function getSettingsAttribute($value)
     {
-        $role = (object)[];
-        $role->name = $this->roles()->first()->name;
-        $role->slug = $this->roles()->first()->slug;
-        $role->permissions = $this->roles()->first()->permissions;
-        return $role;
+        return collect(json_decode($value));
     }
 
-    /**
-     * checks if user has access to listed $permissions.
-     *
-     * @param array permission
-     * @return boolean
-     */
-    public function hasAccess(array $permissions) : bool
+    public function setLocaleAttribute($value)
     {
-        // check if the permission is available in any role
-        foreach ($this->roles as $role) {
-            if($role->hasAccess($permissions)) {
-                return true;
-            }
-        }
-        return false;
+        $this->settings = $this->settings->merge(['locale' => $value]);
     }
 
-    /**
-     * checks if the user belongs to role
-     *
-     * @param string $roleSlug
-     * @return boolean
-     */
-    public function inRole(string $roleSlug)
+    public function getLocaleAttribute()
     {
-        return $this->roles()->where('slug', $roleSlug)->count() == 1;
-    }
-
-    /**
-     * checks if the user belongs to role
-     *
-     * @param string $roleSlugs
-     * @return boolean
-     */
-    public function inRoles(array $roleSlugs)
-    {
-        return $this->roles()->whereIn('slug', $roleSlugs)->count() == 1;
+        return $this->settings->get('locale');
     }
 }
+

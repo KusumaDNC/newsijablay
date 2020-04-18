@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use TCG\Voyager\Facades\Voyager;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Sekretariat\ArsipNomor;
 use App\Models\Sekretariat\KategoriNomorModel;
@@ -76,7 +77,7 @@ class SuperController extends Controller
             //dd(isset($nomor_spare));
             if (isset($nomor_spare)){
                 $nomor_spare->user_id = $request->user_id;
-                $nomor_spare->kategori_nomor_id = $request->kategori;
+                // $nomor_spare->kategori_nomor_id = $request->kategori;
                 $nomor_spare->arsip_id = $request->kode;
                 $nomor_spare->perihal = $request->perihal;
                 $nomor_spare->used = 1;
@@ -102,7 +103,7 @@ class SuperController extends Controller
             $nomor->count = ($total_nomor->count) + 1;
             $nomor->used = 1;
 
-            dd($nomor);
+            // dd($nomor);
             $nomor->save();
         }
 

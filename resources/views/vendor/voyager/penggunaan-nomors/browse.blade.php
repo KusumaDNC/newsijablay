@@ -259,7 +259,7 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input name="kategori" id="kategori" value="kategori" hidden>
+                                        <!-- <input name="kategori" id="kategori" value="kategori" hidden> --> 
                                         <input name="user_id" id="user_id" value="{{Auth::user()->id}}" hidden>
                                          
                                     </div>

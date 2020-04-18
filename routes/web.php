@@ -23,7 +23,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/penggunaan-nomors', 'SuperController@index')->name('indxnomor');
-    Route::post('/penggunaan-nomors/store', 'SuperController@addnmrss')->name('nmr.store');
+    Route::post('/penggunaan-nomors/store', 'SuperController@addnmrs')->name('nmr.store');
  //    Route::get('/penggunaan-nomors', 'Sekretariat\Nomor\SettingNomorController@showSetting')->name('show.setting-nomor');
 	// Route::post('//penggunaan-nomors/add-nomor', 'Sekretariat\Nomor\SettingNomorController@addNomor')->name('add.nd');
  //        Route::get('/settings/edit-nomor/{id}', 'Sekretariat\Nomor\SettingNomorController@editNomor')->name('edit.nd');

@@ -19,7 +19,9 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 
-    /*Route::get('input-data-osses','App\Http\Controllers\Voyager\DataOssController@import')->name('import.rekoss');*/
+    Route::get('/oss/show', 'PDI\RekapOSSController@index')->name('show.oss');
+    Route::post('/oss/import', 'PDI\RekapOSSController@import')->name('import.rekoss');
+    /*Route::get('oss-models','App\Http\Controllers\Voyager\DataOssController@import')->name('import.rekoss');*/
 });
 
 

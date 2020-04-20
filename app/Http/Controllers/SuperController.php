@@ -57,10 +57,11 @@ class SuperController extends Controller
         $kategoris = KategoriNomorModel::all();
         $settingsnm = SettingNomorModel::all();
         $nomors = PenggunaanNomorModel::orderByDesc('updated_at')->get();
+
         $todayss = date('Y-m-d');
         $kodes_null = ArsipNomor::where('is_able', 0)->get();
-        $kodes = ArsipNomor::where('is_able', 1)->get(); 
-
+        $kodes = ArsipNomor::where('is_able', 1)->get();
+        //dd($kategoris);
 
         // return Voyager::view('voyager::settings.index', compact('settings', 'groups', 'active'));
         return view('vendor.voyager.penggunaan-nomors.browse', compact('settings', 'groups', 'active', 'kategoris', 'settingsnm', 'nomors', 'todayss', 'kodes_null', 'kodes'));
@@ -80,7 +81,7 @@ class SuperController extends Controller
 
         if (Carbon::today()->gt(Carbon::parse($tanggal_nomor))){
             $nomor_spare = PenggunaanNomorModel::orderBy('created_at')->where('used', 0)->whereDate('tanggal', Carbon::parse($request->tanggal)->format('Y-m-d'))->first();
-            //dd($nomor_spare);
+            dd($nomor_spare);
             //dd(isset($nomor_spare));
             if (isset($nomor_spare)){
                 $nomor_spare->user_id = $request->user_id;

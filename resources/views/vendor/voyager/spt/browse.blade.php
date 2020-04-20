@@ -223,7 +223,7 @@
 
 @section('page_header')
     <h1 class="page-title">
-        <i class="voyager-settings"></i> Pengambilan Nomor <!-- {{ __('voyager::generic.settings') }} -->
+        <i class="voyager-file-text"></i> Create SPT <!-- {{ __('voyager::generic.settings') }} -->
     </h1>
 @stop
 
@@ -255,120 +255,42 @@
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="col-md-12">
-                            <form class="form-horizontal" action="{{route('nmr.store')}}" method="post" >{{ csrf_field() }}
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <!-- <input name="kategori" id="kategori" value="kategori" hidden> --> 
-                                        <input name="user_id" id="user_id" value="{{Auth::user()->id}}" hidden>
-                                         
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group"><label>Perihal </label>
-                                            <input placeholder="Perihal Surat" name="perihal" id="perihal" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group"><label>Tanggal</label>
-                                            <div class="input-group date">
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                                <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$todayss}}">
-                                                <input type="time" name="time" id="time" value="{{date('H:i:s')}}" hidden>
-                                                <!-- <input type="hidden" name="time" id="time" class="form-control" value="{{date('H:i:s')}}" hidden> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="form-group" id="kode">
-                                        <label class="col-lg-12 control-label">Jenis Surat*</label>
-                                        <select class="select2_demo_3 form-control" name="kode" id="kode" style="width: 100%" required>
-                                        @foreach($kodes as $kode)
-                                            <option value="{{$kode->id}}">{{$kode->kode}} | {{$kode->desc}}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-lg-offset-1 col-lg-11">
-                                        <button type="submit" class="btn btn-primary save">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-1">Buat SPT</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-2">Rekap SPT</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-3">SPT Terhapus</a></li>
+                   {{-- <li class=""><a data-toggle="tab" href="#tab-4">Setting SPT</a></li>--}}
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.spt')
                         </div>
-                        <br>
-                        <div class="col-md-12">
-                            <p>&nbsp;</p><br><br><br>
-                        </div>
-                        <hr>
-                        <br>
-                        <br>
-                        <div class="col-md-12">
-                            @isset($nomors)
-                                <div class="row">
-                                    <div class="col-md-12">
-                                            <table id="example" class="display" style="width:100%">
-                                                <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Bidang</th>
-                                                    <th>Perihal</th>
-                                                    <th>Tanggal</th>
-                                                    <th>Nomor Surat</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                @if(Auth::user()->id == 7)
-                                                    @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                                        <tr>
-                                                            <td style="text-align: center">{{$loop->iteration}}</td>
-                                                            <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                            <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                            <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                            <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                        </tr>
-                                                    @endforeach
+                    </div>
 
-                                                    @elseif(Auth::user()->id == 1)
-                                                    @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                                        <tr>
-                                                            <td style="text-align: center">{{$loop->iteration}}</td>
-                                                            <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                            <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                            <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                            <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                @else
-                                                @foreach($nomors->where('user_id', Auth::user()->id) as $nomor)
-                                                    <tr>
-                                                        <td style="text-align: center">{{$loop->iteration}}</td>
-                                                        <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                        <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                        <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                        <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                @endif
-                                                </tbody>
-                                                <tfoot>
-                                                <tr>
-                                                    <td colspan="5" class="text-center">
-                                                        <ul class="pagination pagination-centered">
-                                                        </ul>
-                                                    </td>
-                                                </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                </div>
-                            @endisset
+
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.rekap-spt')
+                        </div>
+                    </div>
+
+
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.spt_terhapus')
+                        </div>
+                    </div>
+
+                    {{--<div id="tab-4" class="tab-pane">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.setting-spt')
+                        </div>
+                    </div>--}}
+                </div>
+
+            </div>
                         </div>
                     </div>
                 </div>
@@ -380,6 +302,8 @@
  
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="{{asset('dpmptsp/js/bootstrap-datepicker.js')}}"></script>
+
 
 @section('javascript')
 <script type="text/javascript">
@@ -482,6 +406,83 @@
             });
         });
     </script>
+
+
+
+     <script>
+        document.getElementById('addPlayer').onclick = function createInputField() {
+            var input = document.createElement('input');
+            var lineBreak = document.createElement('br');
+            var testId = "tujuan";
+            var i = 0;
+            var x = document.getElementsByTagName('INPUT').length - 2;
+            for (i = 0; i < x; i++) {
+                i;
+            }
+            input.setAttribute('id', testId + i);
+            input.className = 'form-control';
+            input.name = 'tujuan[]';
+            input.placeholder = 'Tujuan Lain';
+            var aplayer1 = document.getElementById('input-player-list');
+            aplayer1.appendChild(input);
+            aplayer1.appendChild(lineBreak);
+        }
+
+        document.getElementById('removePlayer').onclick = function removeInputField() {
+
+            var x = document.getElementsByTagName('INPUT').length;
+            console.log(x);
+            if ( x > 2 ) {
+                $('#input-player-list input:last').remove();
+                $('#input-player-list br:last').remove();
+                return false;
+            } else {
+            }
+        }
+    </script>
+    <script>
+        var $rows = $('#tablel tr');
+        $('#myInput').keyup(debounce(function() {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+            $rows.show().filter(function() {
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
+        }, 300));
+
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+    </script>
+    <script>
+        function showTable()
+        {
+            document.getElementById('table2').style.visibility = 'visible';//shows the table
+            return false; //tells the form not to actaully load the action page
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
     <script type="text/javascript">
     $(".group_select").not('.group_select_new').select2({
         tags: true,

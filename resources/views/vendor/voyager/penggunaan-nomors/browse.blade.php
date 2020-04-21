@@ -228,6 +228,7 @@
 @stop
 
 @section('content')
+<div class="page-content edit-add container-fluid">
     <!-- <div class="container-fluid">
         @include('voyager::alerts')
         @if(config('voyager.show_dev_tips'))
@@ -284,11 +285,7 @@
                             </div>
                             {{--nomor sementara--}}
 
-
                             <div class="row">
-
-
-
                                 <div class="col-12">
                                     <form class="form-horizontal" action="{{route('add.nd')}}" method="post" >
                                         @csrf
@@ -424,11 +421,8 @@
                     </div>
                 </div>
             </div>
-
-
-
     </div>
-
+</div>
 @stop
 
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
@@ -555,7 +549,15 @@
     </form>
 
 {{--button nota dinas & surat--}}
+<script>
 
+    $(function() {
+        $(".navigation__icon").click(function() {
+            $(".navigation").toggleClass('navigation-open');
+        });
+    });
+
+</script>
 
 
 @stop

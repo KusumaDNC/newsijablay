@@ -13,13 +13,10 @@
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
 <<<<<<< HEAD
-<<<<<<< HEAD
         "novay/laravel-word-template": "^1.1",
 =======
         "maatwebsite/excel": "^3.1",
 >>>>>>> 79421b34ac6b314ad72fc36ab421e86d308fbee5
-=======
->>>>>>> parent of 0c45ac7... update form spt 20420n
         "tcg/voyager": "^1.3"
     },
     "require-dev": {

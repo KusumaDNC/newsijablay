@@ -10,9 +10,9 @@
             margin-bottom: 3em;
         }
     </style> -->
-    
+
     <style>
-        
+
 
         .panel-actions .voyager-trash {
             cursor: pointer;
@@ -228,7 +228,6 @@
 @stop
 
 @section('content')
-<div class="page-content edit-add container-fluid">
     <!-- <div class="container-fluid">
         @include('voyager::alerts')
         @if(config('voyager.show_dev_tips'))
@@ -251,38 +250,46 @@
                 <strong>{!! $message !!}</strong>
             </div>
         @endif
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-bordered">
-                    <div class="panel-body">
-                        <div class="col-md-12">
-                            <form class="form-horizontal" action="{{route('nmr.store')}}" method="post" >{{ csrf_field() }}
+            <div class="row">
+                <div class="col-lg-12">
+                    @if ($message = Session::get('success'))
+                        <div class="alert alert-success alert-block">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            <strong>{!! $message !!}</strong>
+                        </div>
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <!-- <input name="kategori" id="kategori" value="kategori" hidden> --> 
-                                        <input name="user_id" id="user_id" value="{{Auth::user()->id}}" hidden>
-                                         
-                                    </div>
+                    @elseif($message = Session::get('danger'))
+                        <div class="alert alert-danger alert-block">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            <strong>{!! $message !!}</strong>
+                        </div>
+                    @endif
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Ambil Nomor</h5>
+                        </div>
+                        <div class="ibox-content">
 
-                                    <div class="col-md-6">
-                                        <div class="form-group"><label>Perihal </label>
-                                            <input placeholder="Perihal Surat" name="perihal" id="perihal" class="form-control">
+                            <div class="row">
+                                @foreach($kategoris as $kategori)
+                                    @if($kategori->id == 2)
+
+                                    @else
+                                        <div class="col-6">
+                                            <button class="btn btn-block btn-outline-success" style="min-height: 300px; font-size: 68px" onclick="{{str_replace(' ', '', (strtolower($kategori->nama_kategori)))}}()">{{$kategori->nama_kategori}}</button>
                                         </div>
 <<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of 11f5f3f... perubahan tambahan pengambilan nomor
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group"><label>Tanggal</label>
                                             <div class="input-group date">
-                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
                                                 <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$todayss}}">
                                                 <input type="time" name="time" id="time" value="{{date('H:i:s')}}" hidden>
                                                 <!-- <input type="hidden" name="time" id="time" class="form-control" value="{{date('H:i:s')}}" hidden> -->
-<<<<<<< HEAD
 =======
                                     @endif
 
@@ -290,7 +297,11 @@
                             </div>
                             {{--nomor sementara--}}
 
+
                             <div class="row">
+
+
+
                                 <div class="col-12">
                                     <form class="form-horizontal" action="{{route('add.nd')}}" method="post" >
                                         @csrf
@@ -348,110 +359,92 @@
                                                     </div>
                                                 </div>
 >>>>>>> 79421b34ac6b314ad72fc36ab421e86d308fbee5
-=======
->>>>>>> parent of 11f5f3f... perubahan tambahan pengambilan nomor
                                             </div>
+
+
+                                            <div class="form-group">
+                                                <div class="col-lg-offset-2 col-lg-10">
+                                                    <button class="btn btn-sm btn-white" type="submit">Submit</button>
+                                                </div>
+                                            </div>
+
+
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
 
-                                <div class="col-12">
-                                    <div class="form-group" id="kode">
-                                        <label class="col-lg-12 control-label">Jenis Surat*</label>
-                                        <select class="select2_demo_3 form-control" name="kode" id="kode" style="width: 100%" required>
-                                        @foreach($kodes as $kode)
-                                            <option value="{{$kode->id}}">{{$kode->kode}} | {{$kode->desc}}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <div class="col-lg-offset-1 col-lg-11">
-                                        <button type="submit" class="btn btn-primary save">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <br>
-                        <div class="col-md-12">
-                            <p>&nbsp;</p><br><br><br>
-                        </div>
-                        <hr>
-                        <br>
-                        <br>
-                        <div class="col-md-12">
+
+                            </div>
+
                             @isset($nomors)
                                 <div class="row">
-                                    <div class="col-md-12">
-                                            <table id="example" class="display" style="width:100%">
-                                                <thead>
+                                    <table class="footable table table-stripped toggle-arrow-tiny" data-limit-navigation="5" data-sorting="true" data-show-toggle="true" data-filtering="true">
+                                        <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Bidang</th>
+                                            <th>Perihal</th>
+                                            <th>Tanggal</th>
+                                            <th>Nomor Surat</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @if(Auth::user()->id == 7)
+                                            @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Bidang</th>
-                                                    <th>Perihal</th>
-                                                    <th>Tanggal</th>
-                                                    <th>Nomor Surat</th>
+                                                    <td style="text-align: center">{{$loop->iteration}}</td>
+                                                    <td style="text-align: center">{{$nomor->user->name}}</td>
+                                                    <td style="text-align: center">{{$nomor->perihal}}</td>
+                                                    <td style="text-align: center">{{$nomor->tanggal}}</td>
+                                                    <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
                                                 </tr>
-                                                </thead>
-                                                <tbody>
-                                                @if(Auth::user()->id == 7)
-                                                    @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                                        <tr>
-                                                            <td style="text-align: center">{{$loop->iteration}}</td>
-                                                            <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                            <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                            <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                            <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                        </tr>
-                                                    @endforeach
+                                            @endforeach
 
-                                                    @elseif(Auth::user()->id == 1)
-                                                    @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                                        <tr>
-                                                            <td style="text-align: center">{{$loop->iteration}}</td>
-                                                            <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                            <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                            <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                            <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                @else
-                                                @foreach($nomors->where('user_id', Auth::user()->id) as $nomor)
-                                                    <tr>
-                                                        <td style="text-align: center">{{$loop->iteration}}</td>
-                                                        <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                        <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                        <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                        <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                @endif
-                                                </tbody>
-                                                <tfoot>
+                                        @elseif(Auth::user()->id == 1)
+                                            @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
                                                 <tr>
-                                                    <td colspan="5" class="text-center">
-                                                        <ul class="pagination pagination-centered">
-                                                        </ul>
-                                                    </td>
+                                                    <td style="text-align: center">{{$loop->iteration}}</td>
+                                                    <td style="text-align: center">{{$nomor->user->name}}</td>
+                                                    <td style="text-align: center">{{$nomor->perihal}}</td>
+                                                    <td style="text-align: center">{{$nomor->tanggal}}</td>
+                                                    <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
                                                 </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
+                                            @endforeach
+                                        @else
+                                            @foreach($nomors->where('user_id', Auth::user()->id) as $nomor)
+                                                <tr>
+                                                    <td style="text-align: center">{{$loop->iteration}}</td>
+                                                    <td style="text-align: center">{{$nomor->user->name}}</td>
+                                                    <td style="text-align: center">{{$nomor->perihal}}</td>
+                                                    <td style="text-align: center">{{$nomor->tanggal}}</td>
+                                                    <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="5" class="text-center">
+                                                <ul class="pagination pagination-centered">
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             @endisset
                         </div>
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
-=======
-        </div>
->>>>>>> parent of 11f5f3f... perubahan tambahan pengambilan nomor
+
+
+
     </div>
-</div>
+
 @stop
- 
+
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 
@@ -463,9 +456,9 @@
     } );
 } );
 </script>
-   
 
-    <script>
+
+    {{--<script>
         $(document).ready(function () {
             $(".select2_demo_1").select2();
             $(".select2_demo_2").select2();
@@ -518,7 +511,7 @@
 
 
         });
-    </script>
+    </script>--}}
 
     <script src="{{asset('dpmptsp/js/bootstrap-datepicker.js')}}"></script>
     <script>
@@ -575,20 +568,9 @@
         <input type="hidden" name="type_slug" id="type_slug" value="settings">
     </form>
 
-<<<<<<< HEAD
 {{--button nota dinas & surat--}}
-<script>
-
-    $(function() {
-        $(".navigation__icon").click(function() {
-            $(".navigation").toggleClass('navigation-open');
-        });
-    });
-
-</script>
 
 
-=======
-    
->>>>>>> parent of 11f5f3f... perubahan tambahan pengambilan nomor
+
 @stop
+

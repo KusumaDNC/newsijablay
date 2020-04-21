@@ -285,9 +285,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group"><label>Tanggal</label>
                                             <div class="input-group date">
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$todayss}}">
                                                 <input type="time" name="time" id="time" value="{{date('H:i:s')}}" hidden>
                                                 <!-- <input type="hidden" name="time" id="time" class="form-control" value="{{date('H:i:s')}}" hidden> -->

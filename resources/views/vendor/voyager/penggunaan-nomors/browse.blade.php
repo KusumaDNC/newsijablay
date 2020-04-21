@@ -279,6 +279,19 @@
                                         <div class="col-6">
                                             <button class="btn btn-block btn-outline-success" style="min-height: 300px; font-size: 68px" onclick="{{str_replace(' ', '', (strtolower($kategori->nama_kategori)))}}()">{{$kategori->nama_kategori}}</button>
                                         </div>
+<<<<<<< HEAD
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group"><label>Tanggal</label>
+                                            <div class="input-group date">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                                <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$todayss}}">
+                                                <input type="time" name="time" id="time" value="{{date('H:i:s')}}" hidden>
+                                                <!-- <input type="hidden" name="time" id="time" class="form-control" value="{{date('H:i:s')}}" hidden> -->
+=======
                                     @endif
 
                                 @endforeach
@@ -342,6 +355,7 @@
                                                         </div>--}}
                                                     </div>
                                                 </div>
+>>>>>>> 79421b34ac6b314ad72fc36ab421e86d308fbee5
                                             </div>
 
 

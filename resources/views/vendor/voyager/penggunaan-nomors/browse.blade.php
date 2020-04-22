@@ -289,23 +289,23 @@
 
 
 
-                                <div class="col-12">
+                                <div class="col-md-12">
                                     <form class="form-horizontal" action="{{route('add.nd')}}" method="post" >
                                         @csrf
                                         <div class="ibox-content">
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-md-12">
 
                                                     <input name="kategori" id="kategori" value="kategori" hidden> {{--<span class="help-block m-b-none">Example block-level help text here.</span>--}}
                                                     <input name="user_id" id="user_id" value="{{Auth::user()->id}}" hidden> {{--<span class="help-block m-b-none">Example block-level help text here.</span>--}}
 
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group"><label>Perihal </label>
                                                         <input placeholder="Perihal Surat" name="perihal" id="perihal" class="form-control"> <span class="help-block m-b-none">{{--Example block-level help text here.--}}</span>
                                                     </div>
                                                 </div>
-                                                {{--<div class="col-6">
+                                                {{--<div class="col-md-6">
                                                     <div class="form-group"><label>Perihal</label>
                                                         <select class="form-control" name="perihal" id="perihal">
                                                             <option value="Cuti"> Cuti </option>
@@ -313,18 +313,20 @@
                                                         </select>
                                                     </div>
                                                 </div>--}}
-                                                <div class="col-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group"><label>Tanggal</label>
                                                         <div class="input-group date">
-                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                            <span class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </span>
                                                             <input type="date" name="tanggal" id="tanggal" class="form-control"
-                                                                   value="{{$today}}">
-                                                            <input type="time" name="time" id="time" class="form-control"
+                                                                   value="{{$todayss}}">
+                                                            <input type="time" name="time" id="time" 
                                                                    value="{{date('H:i:s')}}" hidden>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-md-12">
                                                     <div class="form-group" id="kode">
 
                                                         <label class="col-lg-12 control-label">Jenis Surat*</label>

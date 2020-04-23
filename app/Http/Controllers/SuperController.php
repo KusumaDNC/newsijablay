@@ -22,6 +22,7 @@ use App\Models\SPT\DasarHukumModel;
 use App\PivotName;
 use Illuminate\Support\Facades\Input;
 use App\Models\All\NonASN;
+use App\Models\Sekretariat\DataAsnModel;
 use App\Models\PD\NumberModel;
 
 
@@ -83,7 +84,7 @@ class SuperController extends Controller
 
         if (Carbon::today()->gt(Carbon::parse($tanggal_nomor))){
             $nomor_spare = PenggunaanNomorModel::orderBy('created_at')->where('used', 0)->whereDate('tanggal', Carbon::parse($request->tanggal)->format('Y-m-d'))->first();
-            dd($nomor_spare);
+            // dd($nomor_spare);
             //dd(isset($nomor_spare));
             if (isset($nomor_spare)){
                 $nomor_spare->user_id = $request->user_id;

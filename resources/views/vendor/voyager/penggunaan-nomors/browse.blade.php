@@ -367,7 +367,7 @@
 
                             @isset($nomors)
                                 <div class="row">
-                                    <table class="footable table table-stripped toggle-arrow-tiny" data-limit-navigation="5" data-sorting="true" data-show-toggle="true" data-filtering="true">
+                                    <table id="example" class="display" style="width:100%">
                                         <thead>
                                         <tr>
                                             <th>No</th>

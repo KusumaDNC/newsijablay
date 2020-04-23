@@ -256,7 +256,8 @@
                     <div class="panel-body">
                         <div class="col-md-12">
                             <div class="tabs-container">
-                <ul class="nav nav-tabs">
+                <!-- <ul class="nav nav-tabs"> -->
+                <ul class="nav nav-pills nav-fill">
                     <li class="active"><a data-toggle="tab" href="#tab-1">Buat SPT</a></li>
                     <li class=""><a data-toggle="tab" href="#tab-2">Rekap SPT</a></li>
                     <li class=""><a data-toggle="tab" href="#tab-3">SPT Terhapus</a></li>

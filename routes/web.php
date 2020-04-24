@@ -35,7 +35,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/spt', 'SuperController@gabung')->name('sptgabung');
         Route::post('/spt/all', 'SuperController@sptstore')->name('create.spt');
         Route::get('/spt/all/edit/{id}', 'SPT\CreateSPTController@edit')->name('edit.spt');
-        Route::patch('/spt/all/update/{id}', 'SPT\CreateSPTController@update')->name('update.spt');
+        // Route::patch('/spt/all/update/{id}', 'SPT\CreateSPTController@update')->name('update.spt');
+        Route::patch('/spt/all/update/{id}', 'SuperController@updatespt')->name('update.spt');
         Route::get('/spt/rekap/spt', 'SPT\RekapSPTController@getSpt')->name('rekap.spt');
 
         Route::get('/spt/spt_cetak/{id}', 'SPT\RekapSPTController@cetakSpt')->name('cetak.spt');

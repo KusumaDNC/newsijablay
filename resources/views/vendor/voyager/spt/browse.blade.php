@@ -10,9 +10,9 @@
             margin-bottom: 3em;
         }
     </style> -->
-
+    
     <style>
-
+        
 
         .panel-actions .voyager-trash {
             cursor: pointer;
@@ -223,7 +223,7 @@
 
 @section('page_header')
     <h1 class="page-title">
-        <i class="voyager-settings"></i> Pengambilan Nomor <!-- {{ __('voyager::generic.settings') }} -->
+        <i class="voyager-file-text"></i> Create SPT <!-- {{ __('voyager::generic.settings') }} -->
     </h1>
 @stop
 
@@ -250,191 +250,61 @@
                 <strong>{!! $message !!}</strong>
             </div>
         @endif
-            <div class="row">
-                <div class="col-lg-12">
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success alert-block">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            <strong>{!! $message !!}</strong>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-bordered">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="tabs-container">
+                <!-- <ul class="nav nav-tabs"> -->
+                <ul class="nav nav-pills nav-fill">
+                    <li class="active"><a data-toggle="tab" href="#tab-1">Buat SPT</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-2">Rekap SPT</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-3">SPT Terhapus</a></li>
+                   {{-- <li class=""><a data-toggle="tab" href="#tab-4">Setting SPT</a></li>--}}
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.spt')
                         </div>
+                    </div>
 
-                    @elseif($message = Session::get('danger'))
-                        <div class="alert alert-danger alert-block">
-                            <button type="button" class="close" data-dismiss="alert">×</button>
-                            <strong>{!! $message !!}</strong>
+
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.rekap-spt')
                         </div>
-                    @endif
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Ambil Nomor</h5>
+                    </div>
+
+
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.spt_terhapus')
                         </div>
-                        <div class="ibox-content">
+                    </div>
 
-                            <div class="row">
-                                @foreach($kategoris as $kategori)
-                                    @if($kategori->id == 2)
+                    {{--<div id="tab-4" class="tab-pane">
+                        <div class="panel-body">
+                            @include('vendor.voyager.spt.setting-spt')
+                        </div>
+                    </div>--}}
+                </div>
 
-                                    @else
-                                        <div class="col-6">
-                                            <button class="btn btn-block btn-outline-success" style="min-height: 300px; font-size: 68px" onclick="{{str_replace(' ', '', (strtolower($kategori->nama_kategori)))}}()">{{$kategori->nama_kategori}}</button>
-                                        </div>
-                                    @endif
-
-                                @endforeach
-                            </div>
-                            {{--nomor sementara--}}
-
-
-                            <div class="row">
-
-
-
-                                <div class="col-md-12">
-                                    <form class="form-horizontal" action="{{route('add.nd')}}" method="post" >
-                                        @csrf
-                                        <div class="ibox-content">
-                                            <div class="row">
-                                                <div class="col-md-12">
-
-                                                    <input name="kategori" id="kategori" value="kategori" hidden> {{--<span class="help-block m-b-none">Example block-level help text here.</span>--}}
-                                                    <input name="user_id" id="user_id" value="{{Auth::user()->id}}" hidden> {{--<span class="help-block m-b-none">Example block-level help text here.</span>--}}
-
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group"><label>Perihal </label>
-                                                        <input placeholder="Perihal Surat" name="perihal" id="perihal" class="form-control"> <span class="help-block m-b-none">{{--Example block-level help text here.--}}</span>
-                                                    </div>
-                                                </div>
-                                                {{--<div class="col-md-6">
-                                                    <div class="form-group"><label>Perihal</label>
-                                                        <select class="form-control" name="perihal" id="perihal">
-                                                            <option value="Cuti"> Cuti </option>
-                                                            <option value="Pengadaan Barang dan Jasa"> Pengadaan Barang dan Jasa </option>
-                                                        </select>
-                                                    </div>
-                                                </div>--}}
-                                                <div class="col-md-6">
-                                                    <div class="form-group"><label>Tanggal</label>
-                                                        <div class="input-group date">
-                                                            <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                            </span>
-                                                            <input type="date" name="tanggal" id="tanggal" class="form-control"
-                                                                   value="{{$todayss}}">
-                                                            <input type="time" name="time" id="time" 
-                                                                   value="{{date('H:i:s')}}" hidden>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group" id="kode">
-
-                                                        <label class="col-lg-12 control-label">Jenis Surat*</label>
-
-                                                        <select class="select2_demo_3 form-control" name="kode" id="kode"
-                                                                style="width: 100%" required>
-                                                            @foreach($kodes as $kode)
-                                                                <option value="{{$kode->id}}">{{$kode->kode}} | {{$kode->desc}}</option>
-                                                            @endforeach
-                                                        </select>
-
-
-                                                        {{--<label class="col-lg-12 control-label">Pembuka Nota Dinas</label>
-                                                        <div class="col-12">
-
-                                                            <input placeholder="Pembuka Nota Dinas/ Sebelum dalam rangka" name="pembuka" id="pembuka" class="form-control">
-
-                                                        </div>--}}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="form-group">
-                                                <div class="col-lg-offset-2 col-lg-10">
-                                                    <button class="btn btn-sm btn-white" type="submit">Submit</button>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                    </form>
-                                </div>
-
-
-
-                            </div>
-
-                            @isset($nomors)
-                                <div class="row">
-                                    <table id="example" class="display" style="width:100%">
-                                        <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Bidang</th>
-                                            <th>Perihal</th>
-                                            <th>Tanggal</th>
-                                            <th>Nomor Surat</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @if(Auth::user()->id == 7)
-                                            @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                                <tr>
-                                                    <td style="text-align: center">{{$loop->iteration}}</td>
-                                                    <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                    <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                    <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                    <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                </tr>
-                                            @endforeach
-
-                                        @elseif(Auth::user()->id == 1)
-                                            @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                                <tr>
-                                                    <td style="text-align: center">{{$loop->iteration}}</td>
-                                                    <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                    <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                    <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                    <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                </tr>
-                                            @endforeach
-                                        @else
-                                            @foreach($nomors->where('user_id', Auth::user()->id) as $nomor)
-                                                <tr>
-                                                    <td style="text-align: center">{{$loop->iteration}}</td>
-                                                    <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                    <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                    <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                    <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <td colspan="5" class="text-center">
-                                                <ul class="pagination pagination-centered">
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            @endisset
+            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
+        </div>
     </div>
 
 @stop
-
+ 
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="{{asset('dpmptsp/js/bootstrap-datepicker.js')}}"></script>
+
 
 @section('javascript')
 <script type="text/javascript">
@@ -444,9 +314,9 @@
     } );
 } );
 </script>
+   
 
-
-    {{--<script>
+    <script>
         $(document).ready(function () {
             $(".select2_demo_1").select2();
             $(".select2_demo_2").select2();
@@ -499,7 +369,7 @@
 
 
         });
-    </script>--}}
+    </script>
 
     <script src="{{asset('dpmptsp/js/bootstrap-datepicker.js')}}"></script>
     <script>
@@ -537,6 +407,83 @@
             });
         });
     </script>
+
+
+
+     <script>
+        document.getElementById('addPlayer').onclick = function createInputField() {
+            var input = document.createElement('input');
+            var lineBreak = document.createElement('br');
+            var testId = "tujuan";
+            var i = 0;
+            var x = document.getElementsByTagName('INPUT').length - 2;
+            for (i = 0; i < x; i++) {
+                i;
+            }
+            input.setAttribute('id', testId + i);
+            input.className = 'form-control';
+            input.name = 'tujuan[]';
+            input.placeholder = 'Tujuan Lain';
+            var aplayer1 = document.getElementById('input-player-list');
+            aplayer1.appendChild(input);
+            aplayer1.appendChild(lineBreak);
+        }
+
+        document.getElementById('removePlayer').onclick = function removeInputField() {
+
+            var x = document.getElementsByTagName('INPUT').length;
+            console.log(x);
+            if ( x > 2 ) {
+                $('#input-player-list input:last').remove();
+                $('#input-player-list br:last').remove();
+                return false;
+            } else {
+            }
+        }
+    </script>
+    <script>
+        var $rows = $('#tablel tr');
+        $('#myInput').keyup(debounce(function() {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+            $rows.show().filter(function() {
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
+        }, 300));
+
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+    </script>
+    <script>
+        function showTable()
+        {
+            document.getElementById('table2').style.visibility = 'visible';//shows the table
+            return false; //tells the form not to actaully load the action page
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
     <script type="text/javascript">
     $(".group_select").not('.group_select_new').select2({
         tags: true,
@@ -556,9 +503,5 @@
         <input type="hidden" name="type_slug" id="type_slug" value="settings">
     </form>
 
-{{--button nota dinas & surat--}}
-
-
-
+    
 @stop
-

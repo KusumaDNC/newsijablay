@@ -14,7 +14,21 @@ use App\Models\Sekretariat\KategoriNomorModel;
 use App\Models\Sekretariat\PenggunaanNomorModel;
 use App\Models\Sekretariat\SettingNomorModel;
 use Carbon\Carbon;
+/*<<<<<<< HEAD*/
 use foo\bar;
+
+
+use Illuminate\Support\Facades\DB;
+use App\Models\Sekretariat\RekModel;
+use App\Models\PD\SptModel;
+use App\Models\SPT\DasarHukumModel;
+use App\PivotName;
+use Illuminate\Support\Facades\Input;
+use App\Models\All\NonASN;
+use App\Models\Sekretariat\DataAsnModel;
+use App\Models\PD\NumberModel;
+
+/*>>>>>>> e288cedd4c9b90da279d692bdb8fad9f707b06b9*/
 
 
 class SuperController extends Controller
@@ -74,7 +88,7 @@ class SuperController extends Controller
 
         if (Carbon::today()->gt(Carbon::parse($tanggal_nomor))){
             $nomor_spare = PenggunaanNomorModel::orderBy('created_at')->where('used', 0)->whereDate('tanggal', Carbon::parse($request->tanggal)->format('Y-m-d'))->first();
-            dd($nomor_spare);
+            // dd($nomor_spare);
             //dd(isset($nomor_spare));
             if (isset($nomor_spare)){
                 $nomor_spare->user_id = $request->user_id;
@@ -137,6 +151,110 @@ class SuperController extends Controller
         $nomor->save();
 
         return redirect()->back()->with('success', 'berhasil menambahkan nomor surat');
+    }
+
+     public function sptstore(Request $request)
+    {
+        $this->validate($request, [
+            'perihal' => 'required',
+            'tgl_spt' => 'required',
+            'tgl_berangkat' => 'required',
+            'tgl_pulang' => 'required',
+            'tujuan' => 'required',
+            'pelaksana' => 'required|max:4',
+        ]);
+
+        $id = Auth::user()->id;
+        $year = date('Y');
+
+        $total_nomor = PenggunaanNomorModel::latest()->first();
+        $nomor_terakhir = new PenggunaanNomorModel();
+        $nomor_terakhir->user_id = $id;
+        $nomor_terakhir->kategori_nomor_id = 2;
+        $nomor_terakhir->arsip_id = 12524;
+        $nomor_terakhir->perihal = 'Permohonan Surat Perintah Tugas dalam tangka' .' '.$request->perihal;
+        $nomor_terakhir->tanggal = Carbon::now();
+        $nomor_terakhir->count = ($total_nomor->count) + 1;
+        $nomor_terakhir->used = 1;
+        $nomor_terakhir->save();
+
+
+        //GET INPUT FORM//
+        $input_no_spt = $request->input('nomor_spt');
+        $input_perihal = $request->input('perihal');
+        $input_tgl_spt = $request->input('tgl_spt');
+        $input_tgl_berangkat = $request->input('tgl_berangkat');
+        $input_tgl_pulang = $request->input('tgl_pulang');
+        $input_plk = $request->input('pelaksana');
+        foreach ($input_plk as $item){
+            $spt = DB::table('asn_spt')
+                ->where('data_asn_models_id', '=', $item)
+                ->where('tgl_berangkat', $input_tgl_berangkat)
+                ->exists();
+            //dd($spt);
+
+            /*if ($spt == true){
+                return redirect()->back()->with('error', 'Nama Anda sudah terdaftar pada Data SPT. Silahkan Hapus Salah Satu SPT');
+            }*/
+        }
+
+        //dd($spt);
+       /* $cek_tmp = KegiatanCrash::where('tempat', '=', $k->tempat)->exists();*/
+        $jal = Input::get('pelaksana');
+        //dd($input_plk);
+
+        $input_rek = $request->input('jns_rek');
+        $input_ken = $request->input('kendaraan');
+        $input_tujuan = $request->input('tujuan');
+        $input_pembuka = $request->input('pembuka');
+        $jml_brgkt = count($input_plk);
+        $get_no = NumberModel::latest()->first();
+        //dd($get_no);
+
+        $update_no = new NumberModel();
+        $incno = $get_no->no_spt + 1;
+        $update_no->no_spt = $nomor_terakhir->count;
+        $update_no->no_sppd = $get_no->no_sppd + $jml_brgkt;
+        $update_no->user_id = $id;
+        $update_no->save();
+        //dd($update_no);
+
+        $post = new SptModel();
+        /*094/SPT/6/2019/123412341234*/
+        $format = '094/SPT/'. $id . '/' . $year . '/' . $nomor_terakhir->count;
+        //dd($format);
+
+        $post->nomor_spt = $format;
+        $post->perihal = $input_perihal;
+        $post->tgl_spt = $input_tgl_spt;
+        $post->tgl_berangkat = $input_tgl_berangkat;
+        $post->tgl_pulang = $input_tgl_pulang;
+        $nama = $post->data_asn_models_id;
+        $nama['nama_id'] = $input_plk;
+        $post->data_asn_models_id = $nama;
+        $tujuan = $post->tujuan;
+        $tujuan['tujuan'] = $input_tujuan;
+        $post->tujuan = $tujuan;
+        $post->rek_id = $input_rek;
+        $post->kendaraan = $input_ken;
+        $post->pembuka = $input_pembuka;
+        $post->user_id = Auth::user()->id;
+        //dd($post);
+
+        $post->save();
+
+        foreach ($input_plk as $a){
+
+            $pivot = new PivotName();
+            $pivot->spt_id = $post->id;
+            $pivot->data_asn_models_id = $a;
+            $pivot->tgl_berangkat = $post->tgl_berangkat;
+            //dd($pivot);
+            $pivot->save();
+        }
+
+
+        return redirect()->back()->with('success', 'SPT berhasil ditambahkan');
     }
 
 

@@ -204,7 +204,7 @@ class CreateSPTController extends Controller
         $rek = RekModel::all(['jns_rek', 'id']);
         $spt = SptModel::findOrFail($id);
 
-        return view('spt.base.edit-spt', compact('spt', 'today', 'nama', 'rek'));
+        return view('vendor.voyager.spt.edit-spt', compact('spt', 'today', 'nama', 'rek'));
     }
 
     public function update(Request $request, $id){

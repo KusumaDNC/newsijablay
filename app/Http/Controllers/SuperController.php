@@ -252,9 +252,89 @@ class SuperController extends Controller
             //dd($pivot);
             $pivot->save();
         }
-
-
         return redirect()->back()->with('success', 'SPT berhasil ditambahkan');
+    }
+
+
+    public function updatespt(Request $request, $id){
+        $this->validate($request, [
+            'perihal' => 'required',
+            'tgl_spt' => 'required',
+            'tgl_berangkat' => 'required',
+            'tgl_pulang' => 'required',
+            'tujuan' => 'required',
+            'pelaksana' => 'required|max:4',
+        ]);
+        // dd($request->all());
+
+        $ids = Auth::user()->id;
+        $year = date('Y');
+
+        //GET INPUT FORM//
+        $input_no_spt = $request->input('nomor_spt');
+        $input_perihal = $request->input('perihal');
+        $input_tgl_spt = $request->input('tgl_spt');
+        $input_tgl_berangkat = $request->input('tgl_berangkat');
+        $input_tgl_pulang = $request->input('tgl_pulang');
+        $input_plk = $request->input('pelaksana');
+        foreach ($input_plk as $item){
+            $spt = DB::table('asn_spt')
+                ->where('data_asn_models_id', '=', $item)
+                ->where('tgl_berangkat', $input_tgl_berangkat)
+                ->exists();
+            //dd($spt);
+
+            /*if ($spt == true){
+                return redirect()->back()->with('error', 'Nama Anda sudah terdaftar pada Data SPT. Silahkan Hapus Salah Satu SPT');
+            }*/
+        }
+
+        //dd($spt);
+        /* $cek_tmp = KegiatanCrash::where('tempat', '=', $k->tempat)->exists();*/
+        $jal = Input::get('pelaksana');
+        //dd($input_plk);
+
+        $input_rek = $request->input('jns_rek');
+        $input_ken = $request->input('kendaraan');
+        $input_tujuan = $request->input('tujuan');
+        $input_pembuka = $request->input('pembuka');
+        $jml_brgkt = count($input_plk);
+        $get_no = NumberModel::latest()->first();
+
+        $post = SptModel::findOrFail($id);
+        $post->perihal = $input_perihal;
+        $post->tgl_spt = $input_tgl_spt;
+        $post->tgl_berangkat = $input_tgl_berangkat;
+        $post->tgl_pulang = $input_tgl_pulang;
+        $nama = $post->data_asn_models_id;
+        $nama['nama_id'] = $input_plk;
+        $post->data_asn_models_id = $nama;
+        $tujuan = $post->tujuan;
+        $tujuan['tujuan'] = $input_tujuan;
+        $post->tujuan = $tujuan;
+        $post->rek_id = $input_rek;
+        $post->kendaraan = $input_ken;
+        $post->pembuka = $input_pembuka;
+        $post->user_id = Auth::user()->id;
+        //$post->update();
+
+        $del_plk = DB::table('asn_spt')
+            ->where('spt_id', '=', $post->id);
+        $del_plk->delete();
+
+        foreach ($input_plk as $a){
+
+            $pivot = new PivotName();
+            $pivot->spt_id = $post->id;
+            $pivot->data_asn_models_id = $a;
+            $pivot->tgl_berangkat = $post->tgl_berangkat;
+            //dd($pivot);
+            $pivot->save();
+        }
+
+        return redirect()->route('sptgabung')->with('success', 'SPT berhasil dirubah');
+
+
     }
 
 

@@ -275,7 +275,7 @@
                                     @if($kategori->id == 2)
 
                                     @else
-                                        <div class="col-6">
+                                        <div class="col-md-6">
                                             <button class="btn btn-block btn-outline-success" style="min-height: 300px; font-size: 68px" onclick="{{str_replace(' ', '', (strtolower($kategori->nama_kategori)))}}()">{{$kategori->nama_kategori}}</button>
                                         </div>
                                     @endif

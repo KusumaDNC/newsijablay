@@ -24,6 +24,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     /*Route::get('oss-models','App\Http\Controllers\Voyager\DataOssController@import')->name('import.rekoss');*/
 
+
     //penggunaan NOMOR
         Route::get('/penggunaan-nomors', 'SuperController@index')->name('indxnomor');
         Route::post('/penggunaan-nomors/store', 'SuperController@addnmrs')->name('nmr.store');
@@ -34,10 +35,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/spt', 'SuperController@gabung')->name('sptgabung');
         Route::post('/spt/all', 'SuperController@sptstore')->name('create.spt');
         Route::get('/spt/all/edit/{id}', 'SPT\CreateSPTController@edit')->name('edit.spt');
-        Route::patch('/spt/all/update/{id}', 'SPT\CreateSPTController@update')->name('update.spt');
+        // Route::patch('/spt/all/update/{id}', 'SPT\CreateSPTController@update')->name('update.spt');
+        Route::patch('/spt/all/update/{id}', 'SuperController@updatespt')->name('update.spt');
         Route::get('/spt/rekap/spt', 'SPT\RekapSPTController@getSpt')->name('rekap.spt');
 
         Route::get('/spt/spt_cetak/{id}', 'SPT\RekapSPTController@cetakSpt')->name('cetak.spt');
+        
         Route::get('/spt/sppd_cetak/{id}', 'SPT\RekapSPTController@cetakSppd')->name('cetak.sppd');
         Route::get('/spt/nodin_cetak/{id}', 'SPT\RekapSPTController@cetakNodin')->name('cetak.nodin');
         Route::delete('/spt/hapus/{id}', 'SPT\RekapSPTController@hapusSpt')->name('hapus.spt');
@@ -55,7 +58,15 @@ Route::group(['prefix' => 'admin'], function () {
         Route::delete('/spt/setting/detete/{id}', 'SPT\DasarHukumcontroller@deleteDasarHukum')->name('delete.dasar');
 
 
-/*>>>>>>> e288cedd4c9b90da279d692bdb8fad9f707b06b9*/
+
+
+
+
+
+
+
+
+
     Route::get('/penggunaan-nomor', 'Sekretariat\Nomor\NewAmbilNomor@showSetting')->name('show.setting-nomor');
     Route::post('/penggunaan-nomors/store', 'Sekretariat\Nomor\NewAmbilNomor@addNomor')->name('add.nd');
     Route::get('/penggunaan-nomors/edit-nomor/{id}', 'Sekretariat\Nomor\NewAmbilNomor@editNomor')->name('edit.nd');

@@ -40,6 +40,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/spt/rekap/spt', 'SPT\RekapSPTController@getSpt')->name('rekap.spt');
 
         Route::get('/spt/spt_cetak/{id}', 'SPT\RekapSPTController@cetakSpt')->name('cetak.spt');
+        
         Route::get('/spt/sppd_cetak/{id}', 'SPT\RekapSPTController@cetakSppd')->name('cetak.sppd');
         Route::get('/spt/nodin_cetak/{id}', 'SPT\RekapSPTController@cetakNodin')->name('cetak.nodin');
         Route::delete('/spt/hapus/{id}', 'SPT\RekapSPTController@hapusSpt')->name('hapus.spt');

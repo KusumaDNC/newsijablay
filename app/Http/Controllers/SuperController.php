@@ -29,7 +29,7 @@ use App\Models\PD\NumberModel;
 
 class SuperController extends Controller
 {
-    public function index()
+    public function indx()
     {
         // Check permission
         $this->authorize('browse', Voyager::model('Setting'));
@@ -58,6 +58,9 @@ class SuperController extends Controller
 
 
         $kategoris = KategoriNomorModel::all();
+        $kategoriss = KategoriNomorModel::all()->pluck('name', 'id');
+
+        // $items = KategoriNomorModel::where('active', true)->orderBy('name')->pluck('name', 'id');
         $settingsnm = SettingNomorModel::all();
         $nomors = PenggunaanNomorModel::orderByDesc('updated_at')->get();
 
@@ -67,7 +70,7 @@ class SuperController extends Controller
         //dd($kategoris);
 
         // return Voyager::view('voyager::settings.index', compact('settings', 'groups', 'active'));
-        return view('vendor.voyager.penggunaan-nomors.browse', compact('settings', 'groups', 'active', 'kategoris', 'settingsnm', 'nomors', 'todayss', 'kodes_null', 'kodes'));
+        return view('vendor.voyager.penggunaan-nomors.index', compact('settings', 'groups', 'active', 'kategoris','kategoriss', 'settingsnm', 'nomors', 'todayss', 'kodes_null', 'kodes'));
 
     }
 
@@ -116,11 +119,12 @@ class SuperController extends Controller
 
             // dd($nomor);
             $nomor->save();
+         return response()->json($nomor);
         }
 
 
 
-        return redirect()->back()->with('success', 'berhasil menambahkan nomor surat');
+        // return redirect()->back()->with('success', 'berhasil menambahkan nomor surat');
     }
 
 

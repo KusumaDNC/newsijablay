@@ -22,182 +22,110 @@
 @section('content')
     <div class="page-content edit-add container-fluid">
         <div class="row">
-            <div class="col-lg-12">
-                @if ($message = Session::get('success'))
-                    <div class="alert alert-success alert-block">
-                        <button type="button" class="close" data-dismiss="alert">×</button>
-                        <strong>{!! $message !!}</strong>
-                    </div>
+            <div class="col-md-12">
 
-                @elseif($message = Session::get('danger'))
-                    <div class="alert alert-danger alert-block">
-                        <button type="button" class="close" data-dismiss="alert">×</button>
-                        <strong>{!! $message !!}</strong>
-                    </div>
-                @endif
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Ambil Nomor</h5>
-                    </div>
-                    <div class="ibox-content">
+                <div class="panel panel-bordered">
+                    <!-- form start -->
+                    <form role="form"
+                            class="form-edit-add"
+                            action="{{ $edit ? route('voyager.'.$dataType->slug.'.update', $dataTypeContent->getKey()) : route('voyager.'.$dataType->slug.'.store') }}"
+                            method="POST" enctype="multipart/form-data">
+                        <!-- PUT Method if we are editing -->
+                        @if($edit)
+                            {{ method_field("PUT") }}
+                        @endif
 
-                        <div class="row">
-                            @foreach($kategoris as $kategori)
-                                @if($kategori->id == 2)
+                        <!-- CSRF TOKEN -->
+                        {{ csrf_field() }}
 
-                                @else
-                                    <div class="col-6">
-                                        <button class="btn btn-block btn-outline-success" style="min-height: 300px; font-size: 68px" onclick="{{str_replace(' ', '', (strtolower($kategori->nama_kategori)))}}()">{{$kategori->nama_kategori}}</button>
-                                    </div>
+                        <div class="panel-body">
+
+                            @if (count($errors) > 0)
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <!-- Adding / Editing -->
+                            @php
+                                $dataTypeRows = $dataType->{($edit ? 'editRows' : 'addRows' )};
+                            @endphp
+
+                            @foreach($dataTypeRows as $row)
+                           
+                                <!-- GET THE DISPLAY OPTIONS -->
+                                @php
+                                    $display_options = $row->details->display ?? NULL;
+                                    if ($dataTypeContent->{$row->field.'_'.($edit ? 'edit' : 'add')}) {
+                                        $dataTypeContent->{$row->field} = $dataTypeContent->{$row->field.'_'.($edit ? 'edit' : 'add')};
+                                    }
+                                @endphp
+                                @if (isset($row->details->legend) && isset($row->details->legend->text))
+                                    <legend class="text-{{ $row->details->legend->align ?? 'center' }}" style="background-color: {{ $row->details->legend->bgcolor ?? '#f0f0f0' }};padding: 5px;">{{ $row->details->legend->text }}</legend>
                                 @endif
 
-                            @endforeach
-                        </div>
-                        {{--nomor sementara--}}
+                                <div class="form-group @if($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                    {{ $row->slugify }}
+                                    <label class="control-label" for="name">{{ $row->getTranslatedAttribute('display_name') }}</label>
+                                    @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                    @if (isset($row->details->view))
+                                        @include($row->details->view, ['row' => $row, 'dataType' => $dataType, 'dataTypeContent' => $dataTypeContent, 'content' => $dataTypeContent->{$row->field}, 'action' => ($edit ? 'edit' : 'add'), 'view' => ($edit ? 'edit' : 'add'), 'options' => $row->details])
+                                    @elseif ($row->type == 'relationship')
+                                    @if($row->field == 'kegiatan_model_belongsto_user_relationship')
+                                        
+                                        @if(Auth::user()->hasRole('admin'))
+                                        @include('voyager::formfields.relationship', ['options' => $row->details])
+                                        @else
+                                        <input type="hidden" name="kegiatan_model_belongsto_user_relationship" value="{{Auth::user()->id}}">
+                                        @endif
 
-
-                        <div class="row">
-
-
-
-                            <div class="col-12">
-                                <form class="form-horizontal" action="{{route('add.nd')}}" method="post" >
-                                    @csrf
-                                    <div class="ibox-content">
-                                        <div class="row">
-                                            <div class="col-12">
-
-                                                <input name="kategori" id="kategori" value="kategori" hidden> {{--<span class="help-block m-b-none">Example block-level help text here.</span>--}}
-                                                <input name="user_id" id="user_id" value="{{Auth::user()->id}}" hidden> {{--<span class="help-block m-b-none">Example block-level help text here.</span>--}}
-
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group"><label>Perihal </label>
-                                                    <input placeholder="Perihal Surat" name="perihal" id="perihal" class="form-control"> <span class="help-block m-b-none">{{--Example block-level help text here.--}}</span>
-                                                </div>
-                                            </div>
-                                            {{--<div class="col-6">
-                                                <div class="form-group"><label>Perihal</label>
-                                                    <select class="form-control" name="perihal" id="perihal">
-                                                        <option value="Cuti"> Cuti </option>
-                                                        <option value="Pengadaan Barang dan Jasa"> Pengadaan Barang dan Jasa </option>
-                                                    </select>
-                                                </div>
-                                            </div>--}}
-                                            <div class="col-6">
-                                                <div class="form-group"><label>Tanggal</label>
-                                                    <div class="input-group date">
-                                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                        <input type="date" name="tanggal" id="tanggal" class="form-control"
-                                                               value="{{$today}}">
-                                                        <input type="time" name="time" id="time" class="form-control"
-                                                               value="{{date('H:i:s')}}" hidden>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group" id="kode">
-
-                                                    <label class="col-lg-12 control-label">Jenis Surat*</label>
-
-                                                    <select class="select2_demo_3 form-control" name="kode" id="kode"
-                                                            style="width: 100%" required>
-                                                        @foreach($kodes as $kode)
-                                                            <option value="{{$kode->id}}">{{$kode->kode}} | {{$kode->desc}}</option>
-                                                        @endforeach
-                                                    </select>
-
-
-                                                    {{--<label class="col-lg-12 control-label">Pembuka Nota Dinas</label>
-                                                    <div class="col-12">
-
-                                                        <input placeholder="Pembuka Nota Dinas/ Sebelum dalam rangka" name="pembuka" id="pembuka" class="form-control">
-
-                                                    </div>--}}
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <div class="col-lg-offset-2 col-lg-10">
-                                                <button class="btn btn-sm btn-white" type="submit">Submit</button>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </form>
-                            </div>
-
-
-
-                        </div>
-
-                        @isset($nomors)
-                            <div class="row">
-                                <table class="footable table table-stripped toggle-arrow-tiny" data-limit-navigation="5" data-sorting="true" data-show-toggle="true" data-filtering="true">
-                                    <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Bidang</th>
-                                        <th>Perihal</th>
-                                        <th>Tanggal</th>
-                                        <th>Nomor Surat</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @if(Auth::user()->id == 7)
-                                        @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                            <tr>
-                                                <td style="text-align: center">{{$loop->iteration}}</td>
-                                                <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                            </tr>
-                                        @endforeach
-
-                                    @elseif(Auth::user()->id == 1)
-                                        @foreach($nomors->where('arsip_id', '!=', null) as $nomor)
-                                            <tr>
-                                                <td style="text-align: center">{{$loop->iteration}}</td>
-                                                <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                            </tr>
-                                        @endforeach
                                     @else
-                                        @foreach($nomors->where('user_id', Auth::user()->id) as $nomor)
-                                            <tr>
-                                                <td style="text-align: center">{{$loop->iteration}}</td>
-                                                <td style="text-align: center">{{$nomor->user->name}}</td>
-                                                <td style="text-align: center">{{$nomor->perihal}}</td>
-                                                <td style="text-align: center">{{$nomor->tanggal}}</td>
-                                                <td style="text-align: center">{{$nomor->kodenomor->kode}}/{{$nomor->count}}</td>
-                                            </tr>
+
+                                    @include('voyager::formfields.relationship', ['options' => $row->details])
+
+                                    @endif
+                                       
+                                    @else
+                                        {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
+                                    @endif
+
+                                    @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                        {!! $after->handle($row, $dataType, $dataTypeContent) !!}
+                                    @endforeach
+                                    @if ($errors->has($row->field))
+                                        @foreach ($errors->get($row->field) as $error)
+                                            <span class="help-block">{{ $error }}</span>
                                         @endforeach
                                     @endif
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <td colspan="5" class="text-center">
-                                            <ul class="pagination pagination-centered">
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        @endisset
-                    </div>
+                                </div>
+                            @endforeach
+
+                        </div><!-- panel-body -->
+
+                        <div class="panel-footer">
+                            @section('submit-buttons')
+                                <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                            @stop
+                            @yield('submit-buttons')
+                        </div>
+                    </form>
+
+                    <iframe id="form_target" name="form_target" style="display:none"></iframe>
+                    <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post"
+                            enctype="multipart/form-data" style="width:0;height:0;overflow:hidden">
+                        <input name="image" id="upload_file" type="file"
+                                 onchange="$('#my_form').submit();this.value='';">
+                        <input type="hidden" name="type_slug" id="type_slug" value="{{ $dataType->slug }}">
+                        {{ csrf_field() }}
+                    </form>
+
                 </div>
             </div>
         </div>
-
-
-
     </div>
 
     <div class="modal fade modal-danger" id="confirm_delete_modal">
